@@ -57,7 +57,7 @@ public class CoapClientToServerConnectorTest
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception
 	{
-		_ServerGateway = new CoapServerGateway(new DefaultDataMessageListener());
+		_ServerGateway = new CoapServerGateway();
 		
 		assertTrue(_ServerGateway.startServer());
 	}
