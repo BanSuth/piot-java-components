@@ -24,6 +24,7 @@ import programmingtheiot.data.SystemPerformanceData;
 import programmingtheiot.data.SystemStateData;
 
 import programmingtheiot.gda.connection.CloudClientConnector;
+import programmingtheiot.gda.connection.CoapClientConnector;
 import programmingtheiot.gda.connection.CoapServerGateway;
 import programmingtheiot.gda.connection.IPersistenceClient;
 import programmingtheiot.gda.connection.IPubSubClient;
@@ -47,7 +48,8 @@ public class DeviceDataManager implements IDataMessageListener
 	// private var's
 	
 	private boolean enableMqttClient = true;
-	private boolean enableCoapServer = false;
+	private boolean enableCoapServer = true;
+	private boolean enableCoapClient = true;
 	private boolean enableCloudClient = false;
 	private boolean enableSmtpClient = false;
 	private boolean enablePersistenceClient = false;
@@ -59,6 +61,7 @@ public class DeviceDataManager implements IDataMessageListener
 	private IPersistenceClient persistenceClient = null;
 	private IRequestResponseClient smtpClient = null;
 	private CoapServerGateway coapServer = null;
+	private CoapClientConnector coapClient = null;
 	private SystemPerformanceManager sysPerfMgr = null;
 	
 	// constructors
@@ -77,6 +80,8 @@ public class DeviceDataManager implements IDataMessageListener
 		this.enableCloudClient =configUtil.getBoolean(ConfigConst.GATEWAY_DEVICE, ConfigConst.ENABLE_CLOUD_CLIENT_KEY);
 		
 		this.enablePersistenceClient =configUtil.getBoolean(ConfigConst.GATEWAY_DEVICE, ConfigConst.ENABLE_PERSISTENCE_CLIENT_KEY);
+		
+		this.enableCoapClient = configUtil.getBoolean(ConfigConst.GATEWAY_DEVICE, ConfigConst.ENABLE_COAP_CLIENT_KEY);
 		
 		initManager();
 	}
@@ -285,6 +290,10 @@ public class DeviceDataManager implements IDataMessageListener
 			this.coapServer.setDataMessageListener(this);
 		}
 		
+		if (this.enableCoapClient) {
+			this.coapClient = new CoapClientConnector();
+			this.coapClient.setDataMessageListener(this);
+		}
 		if (this.enableCloudClient) {
 			// TODO: implement  in Lab Module 10
 		}
